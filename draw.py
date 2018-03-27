@@ -24,12 +24,16 @@ def add_box( points, x, y, z, width, height, depth ):
     y1 = y - height
     z1 = z - depth
     #top
-    add_polygon(points,x,y,z1,x,y,z,x1,y,z)
-    add_polygon(points,x1,y,z1,x,y,z1,x1,y,z)
+    add_polygon(points,x1,y,z1,x,y,z1,x,y,z)
+    add_polygon(points,x1,y,z,x1,y,z1,x,y,z)
+    #add_polygon(points,x,y,z1,x,y,z,x1,y,z)
+    #add_polygon(points,x1,y,z1,x,y,z1,x1,y,z)
 
     #bottom
-    add_polygon(points,x,y1,z1,x,y1,z,x1,y1,z)
-    add_polygon(points,x1,y1,z1,x,y1,z1,x1,y1,z)
+    add_polygon(points,x,y1,z1,x1,y1,z1,x1,y1,z)
+    add_polygon(points,x,y1,z,x,y1,z1,x1,y1,z)
+    #add_polygon(points,x,y1,z1,x,y1,z,x1,y1,z)
+    #add_polygon(points,x1,y1,z1,x,y1,z1,x1,y1,z)
     
     #front
     add_polygon(points,x,y,z,x,y1,z,x1,y1,z)
@@ -41,8 +45,10 @@ def add_box( points, x, y, z, width, height, depth ):
     #add_edge(points, x, y, z, x, y1, z)
 
     #back
-    add_polygon(points,x,y,z1,x,y1,z1,x1,y1,z1)
-    add_polygon(points,x1,y,z1,x,y,z1,x1,y1,z1)
+    add_polygon(points,x1,y,z1,x1,y1,z1,x,y1,z1)
+    #add_polygon(points,x,y,z1,x,y1,z1,x1,y1,z1)
+    add_polygon(points,x,y,z1,x1,y,z1,x,y1,z1)
+    #add_polygon(points,x1,y,z1,x,y,z1,x1,y1,z1)
     
     #add_edge(points, x, y, z1, x1, y, z1)
     #add_edge(points, x, y1, z1, x1, y1, z1)
@@ -56,10 +62,10 @@ def add_box( points, x, y, z, width, height, depth ):
     #add_polygon(points,x,y,z1,x,y,z,x,y1,z1)
 
     #right
-    add_polygon(points,x1,y,z1,x1,y1,z1,x1,y1,z)
-    add_polygon(points,x1,y,z,x1,y,z1,x1,y1,z)
-    #add_polygon(points,x1,y,z,x1,y1,z,x1,y1,z1)
-    #add_polygon(points,x1,y,z1,x1,y,z,x1,y1,z1)
+    #add_polygon(points,x1,y,z1,x1,y1,z1,x1,y1,z)
+    #add_polygon(points,x1,y,z,x1,y,z1,x1,y1,z)
+    add_polygon(points,x1,y,z,x1,y1,z,x1,y1,z1)
+    add_polygon(points,x1,y,z1,x1,y,z,x1,y1,z1)
     
     #sides
     #add_edge(points, x, y, z, x, y, z1)
