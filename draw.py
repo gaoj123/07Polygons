@@ -84,13 +84,22 @@ def add_sphere( edges, cx, cy, cz, r, step ):
     step+= 1
     for lat in range(lat_start, lat_stop):
         for longt in range(longt_start, longt_stop+1):
-            index = lat * step + longt
-            topL=points[index+step+1]
-            topR=points[index+step]
-            botL=points[index+1]
-            botR=points[index]
-            add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
-            add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
+            #index = lat * step + longt
+            if((lat+1)*step+longt+1<len(points)):
+                indexBotL=lat*step+longt+1
+                indexBotR=lat*step+longt
+                indexTopL=(lat+1)*step+longt+1
+                indexTopR=(lat+1)*step+longt
+                topL=points[indexTopL]
+                topR=points[indexTopR]
+                botL=points[indexBotL]
+                botR=points[indexBotR]
+                #topL=points[longt+1][index+1]
+                #topR=points[longt+1][index]
+                #botL=points[longt][index+1]
+                #botR=points[longt][index]
+                add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
             #add_edge(edges, points[index][0],
                      #points[index][1],
                      #points[index][2],
