@@ -13,9 +13,15 @@ def draw_polygons( points, screen, color ):
         p0=points[i]
         p1=points[i+1]
         p2=points[i+2]
-        draw_line(p0[0],p0[1],p1[0],p1[1],screen,color)
-        draw_line(p1[0],p1[1],p2[0],p2[1],screen,color)
-        draw_line(p2[0],p2[1],p0[0],p0[1],screen,color)
+        v1=vectorV(p0,p1)
+        v2=vectorV(p0,p2)
+        #draw_line(p0[0],p0[1],p1[0],p1[1],screen,color)
+        #draw_line(p1[0],p1[1],p2[0],p2[1],screen,color)
+        #draw_line(p2[0],p2[1],p0[0],p0[1],screen,color)
+        if(cross_product(v1,v2)[2]>0):
+             draw_line(p0[0],p0[1],p1[0],p1[1],screen,color)
+             draw_line(p1[0],p1[1],p2[0],p2[1],screen,color)
+             draw_line(p2[0],p2[1],p0[0],p0[1],screen,color)
         i+=3
             
 
@@ -24,11 +30,11 @@ def add_box( points, x, y, z, width, height, depth ):
     y1 = y - height
     z1 = z - depth
     #top
-    add_polygon(points,x1,y,z1,x,y,z1,x,y,z)
-    add_polygon(points,x1,y,z,x1,y,z1,x,y,z)
+    add_polygon(points,x,y,z1,x,y,z,x1,y,z)
+    add_polygon(points,x1,y,z1,x,y,z1,x1,y,z)
     #bottom
-    add_polygon(points,x,y1,z1,x1,y1,z1,x1,y1,z)
-    add_polygon(points,x,y1,z,x,y1,z1,x1,y1,z)   
+    add_polygon(points,x,y1,z,x,y1,z1,x1,y1,z1)
+    add_polygon(points,x1,y1,z,x,y1,z,x1,y1,z1)
     #front
     add_polygon(points,x,y,z,x,y1,z,x1,y1,z)
     add_polygon(points,x1,y,z,x,y,z,x1,y1,z)
@@ -63,7 +69,9 @@ def add_sphere( edges, cx, cy, cz, r, step ):
                 topR=points[indexTopR]
                 botL=points[indexBotL]
                 botR=points[indexBotR]
-                if(lat*step+longt%(step+1)!=10):
+                if(lat*step+longt%(step+1)!=10 and (index+1)%(step)!=0):
+                    #add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botL[0],botL[1],botL[2])
+                    #add_polygon(edges,topR[0],topR[1],topR[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
                     add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
                     add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
             elif (index>=(step)*(step-2) and index<len(points)-1):
@@ -75,9 +83,14 @@ def add_sphere( edges, cx, cy, cz, r, step ):
                 topR=points[indexTopR]
                 botL=points[indexBotL]
                 botR=points[indexBotR]
-                if((lat*step+longt)%(step+1)!=10):
-                    add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
-                    add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])     
+                add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])  
+                #if((lat*step+longt)%(step+1)!=10):
+                #if(index%(step+1)!=10):
+                    #add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botL[0],botL[1],botL[2])
+                    #add_polygon(edges,topR[0],topR[1],topR[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                    #add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                    #add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])     
 
 def generate_sphere( cx, cy, cz, r, step ):
     points = []
@@ -107,17 +120,32 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
     lat_stop = step
     longt_start = 0
     longt_stop = step
-
     for lat in range(lat_start, lat_stop):
         for longt in range(longt_start, longt_stop):
             index = lat * step + longt
-
-            add_edge(edges, points[index][0],
-                     points[index][1],
-                     points[index][2],
-                     points[index][0]+1,
-                     points[index][1]+1,
-                     points[index][2]+1 )
+            if((lat+1)*step+longt+1<len(points)):
+                indexBotL=lat*step+longt+1
+                indexBotR=lat*step+longt
+                indexTopL=(lat+1)*step+longt+1
+                indexTopR=(lat+1)*step+longt
+                topL=points[indexTopL]
+                topR=points[indexTopR]
+                botL=points[indexBotL]
+                botR=points[indexBotR]
+                if(lat*step+longt%(step+1)!=10):
+                    add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                    add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
+            elif (index>=(step)*(step-2) and index<len(points)-1):
+                indexBotR=index
+                indexBotL=index+1
+                indexTopL=(indexBotL)%(step)
+                indexTopR=(indexBotR)%(step)
+                topL=points[indexTopL]
+                topR=points[indexTopR]
+                botL=points[indexBotL]
+                botR=points[indexBotR]
+                add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])   
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
     points = []

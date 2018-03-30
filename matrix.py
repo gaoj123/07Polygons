@@ -1,5 +1,21 @@
 import math
 
+def vectorV(a,b):
+    #vector pointing from a to b
+    m=[]
+    m.append(b[0]-a[0])
+    m.append(b[1]-a[1])
+    m.append(b[2]-a[2])
+    return m
+
+def cross_product(v1,v2):
+    #given two vectors: v1 to v2
+    n=[]
+    n.append(v1[1]*v2[2]-v1[2]*v2[1])
+    n.append(v1[2]*v2[0]-v1[0]*v2[2])
+    n.append(v1[0]*v2[1]-v1[1]*v2[0])
+    return n
+    
 def make_bezier():
     return [
         [-1, 3, -3, 1],
