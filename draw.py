@@ -26,52 +26,21 @@ def add_box( points, x, y, z, width, height, depth ):
     #top
     add_polygon(points,x1,y,z1,x,y,z1,x,y,z)
     add_polygon(points,x1,y,z,x1,y,z1,x,y,z)
-    #add_polygon(points,x,y,z1,x,y,z,x1,y,z)
-    #add_polygon(points,x1,y,z1,x,y,z1,x1,y,z)
-
     #bottom
     add_polygon(points,x,y1,z1,x1,y1,z1,x1,y1,z)
-    add_polygon(points,x,y1,z,x,y1,z1,x1,y1,z)
-    #add_polygon(points,x,y1,z1,x,y1,z,x1,y1,z)
-    #add_polygon(points,x1,y1,z1,x,y1,z1,x1,y1,z)
-    
+    add_polygon(points,x,y1,z,x,y1,z1,x1,y1,z)   
     #front
     add_polygon(points,x,y,z,x,y1,z,x1,y1,z)
     add_polygon(points,x1,y,z,x,y,z,x1,y1,z)
-    
-    #add_edge(points, x, y, z, x1, y, z)
-    #add_edge(points, x, y1, z, x1, y1, z)
-    #add_edge(points, x1, y, z, x1, y1, z)
-    #add_edge(points, x, y, z, x, y1, z)
-
     #back
     add_polygon(points,x1,y,z1,x1,y1,z1,x,y1,z1)
-    #add_polygon(points,x,y,z1,x,y1,z1,x1,y1,z1)
     add_polygon(points,x,y,z1,x1,y,z1,x,y1,z1)
-    #add_polygon(points,x1,y,z1,x,y,z1,x1,y1,z1)
-    
-    #add_edge(points, x, y, z1, x1, y, z1)
-    #add_edge(points, x, y1, z1, x1, y1, z1)
-    #add_edge(points, x1, y, z1, x1, y1, z1)
-    #add_edge(points, x, y, z1, x, y1, z1)
-
     #left
     add_polygon(points,x,y,z1,x,y1,z1,x,y1,z)
     add_polygon(points,x,y,z,x,y,z1,x,y1,z)
-    #add_polygon(points,x,y,z,x,y1,z,x,y1,z1)
-    #add_polygon(points,x,y,z1,x,y,z,x,y1,z1)
-
     #right
-    #add_polygon(points,x1,y,z1,x1,y1,z1,x1,y1,z)
-    #add_polygon(points,x1,y,z,x1,y,z1,x1,y1,z)
     add_polygon(points,x1,y,z,x1,y1,z,x1,y1,z1)
     add_polygon(points,x1,y,z1,x1,y,z,x1,y1,z1)
-    
-    #sides
-    #add_edge(points, x, y, z, x, y, z1)
-    #add_edge(points, x1, y, z, x1, y, z1)
-    #add_edge(points, x, y1, z, x, y1, z1)
-    #add_edge(points, x1, y1, z, x1, y1, z1)
 
 def add_sphere( edges, cx, cy, cz, r, step ):
     points = generate_sphere(cx, cy, cz, r, step)
@@ -84,7 +53,7 @@ def add_sphere( edges, cx, cy, cz, r, step ):
     step+= 1
     for lat in range(lat_start, lat_stop):
         for longt in range(longt_start, longt_stop+1):
-            #index = lat * step + longt
+            index = lat * step + longt
             if((lat+1)*step+longt+1<len(points)):
                 indexBotL=lat*step+longt+1
                 indexBotR=lat*step+longt
@@ -94,18 +63,21 @@ def add_sphere( edges, cx, cy, cz, r, step ):
                 topR=points[indexTopR]
                 botL=points[indexBotL]
                 botR=points[indexBotR]
-                #topL=points[longt+1][index+1]
-                #topR=points[longt+1][index]
-                #botL=points[longt][index+1]
-                #botR=points[longt][index]
-                add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
-                add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
-            #add_edge(edges, points[index][0],
-                     #points[index][1],
-                     #points[index][2],
-                     #points[index][0]+1,
-                     #points[index][1]+1,
-                     #points[index][2]+1 )
+                if(lat*step+longt%(step+1)!=10):
+                    add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                    add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])
+            elif (index>=(step)*(step-2) and index<len(points)-1):
+                indexBotR=index
+                indexBotL=index+1
+                indexTopL=(indexBotL)%(step)
+                indexTopR=(indexBotR)%(step)
+                topL=points[indexTopL]
+                topR=points[indexTopR]
+                botL=points[indexBotL]
+                botR=points[indexBotR]
+                if((lat*step+longt)%(step+1)!=10):
+                    add_polygon(edges,topL[0],topL[1],topL[2],botL[0],botL[1],botL[2],botR[0],botR[1],botR[2])
+                    add_polygon(edges,topR[0],topR[1],topR[2],topL[0],topL[1],topL[2],botR[0],botR[1],botR[2])     
 
 def generate_sphere( cx, cy, cz, r, step ):
     points = []
