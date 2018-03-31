@@ -9,9 +9,13 @@ color = [ 0, 255, 0 ]
 edges = []
 transform = new_matrix()
 
-# print_matrix( make_bezier() )
-# print
-# print_matrix( make_hermite() )
-# print
 
+
+#RUNS MR. DW'S SCRIPT
 parse_file( 'script', edges, transform, screen, color )
+
+#parse_file( 'script2', edges, transform, screen, color )
+edges = []
+
+#RUNS MY WREATH SCRIPT
+parse_file( 'wreath', edges, transform, screen, color )
